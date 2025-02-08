@@ -97,6 +97,7 @@ class HealthConnectManager(private val context: Context) {
 
   /**
    * TODO: Writes [WeightRecord] to Health Connect.
+   * modify this part to heartrate
    */
   suspend fun writeWeightInput(weightInput: Double) {
     val time = ZonedDateTime.now().withNano(0)
