@@ -85,15 +85,16 @@ fun InputHeartRateScreen(
             errorId.value = uiState.uuid
         }
     }
-// change
-    var weightInput by remember { mutableStateOf("") }
+// change the variable to heartrate
+    var heartRateInput by remember { mutableStateOf("") }
 
-    // Check if the input value is a valid weight
-    fun hasValidDoubleInRange(weight: String): Boolean {
-        val tempVal = weight.toDoubleOrNull()
+    // Check if the input value is a valid heart rate, 60-100/min
+    // value should <= 200
+    fun hasValidDoubleInRange(rate: String): Boolean {
+        val tempVal = rate.toDoubleOrNull()
         return if (tempVal == null) {
             false
-        } else tempVal <= 1000
+        } else tempVal <= 200
     }
 
     if (uiState != InputHeartRateViewModel.UiState.Uninitialized) {
@@ -112,22 +113,23 @@ fun InputHeartRateScreen(
                 }
             } else {
                 item {
+                    // assign the value
                     OutlinedTextField(
-                        value = weightInput,
+                        value = heartRateInput,
                         onValueChange = {
-                            weightInput = it
+                            heartRateInput = it
                         },
 
                         label = {
-                            Text(stringResource(id = R.string.weight_input))
+                            Text(stringResource(id = R.string.heartrate_input))
                         },
-                        isError = !hasValidDoubleInRange(weightInput),
-                        keyboardActions = KeyboardActions { !hasValidDoubleInRange(weightInput) },
+                        isError = !hasValidDoubleInRange(heartRateInput),
+                        keyboardActions = KeyboardActions { !hasValidDoubleInRange(heartRateInput) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
-                    if (!hasValidDoubleInRange(weightInput)) {
+                    if (!hasValidDoubleInRange(heartRateInput)) {
                         Text(
-                            text = stringResource(id = R.string.valid_weight_error_message),
+                            text = stringResource(id = R.string.valid_rate_error_message),
                             color = MaterialTheme.colors.error,
                             style = MaterialTheme.typography.caption,
                             modifier = Modifier.padding(start = 16.dp)
@@ -135,11 +137,11 @@ fun InputHeartRateScreen(
                     }
 
                     Button(
-                        enabled = hasValidDoubleInRange(weightInput),
+                        enabled = hasValidDoubleInRange(heartRateInput),
                         onClick = {
-                            onInsertClick(weightInput.toDouble())
+                            onInsertClick(heartRateInput.toDouble())
                             // clear TextField when new weight is entered
-                            weightInput = ""
+                            heartRateInput = ""
                         },
 
                         modifier = Modifier.fillMaxHeight()
@@ -164,6 +166,7 @@ fun InputHeartRateScreen(
                         val zonedDateTime =
                             dateTimeWithOffsetOrDefault(reading.time, reading.zoneOffset)
                         Text(
+                            // need to change in vm first
                             text = "${reading.weight}" + " ",
                         )
                         Text(text = formatter.format(zonedDateTime))
@@ -176,9 +179,9 @@ fun InputHeartRateScreen(
                         modifier = Modifier.padding(vertical = 20.dp)
                     )
                     if (weeklyAvg == null) {
-                        Text(text = "0.0" + stringResource(id = R.string.kilograms))
+                        Text(text = "0.0" + stringResource(id = R.string.rate))
                     } else {
-                        Text(text = "$weeklyAvg".take(5) + stringResource(id = R.string.kilograms))
+                        Text(text = "$weeklyAvg".take(5) + stringResource(id = R.string.rate))
                     }
                 }
             }
