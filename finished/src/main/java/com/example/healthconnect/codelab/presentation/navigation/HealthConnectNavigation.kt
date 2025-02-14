@@ -36,6 +36,9 @@ import com.example.healthconnect.codelab.presentation.screen.exercisesession.Exe
 import com.example.healthconnect.codelab.presentation.screen.exercisesessiondetail.ExerciseSessionDetailScreen
 import com.example.healthconnect.codelab.presentation.screen.exercisesessiondetail.ExerciseSessionDetailViewModel
 import com.example.healthconnect.codelab.presentation.screen.exercisesessiondetail.ExerciseSessionDetailViewModelFactory
+import com.example.healthconnect.codelab.presentation.screen.inputreadings.InputHeartRateScreen
+import com.example.healthconnect.codelab.presentation.screen.inputreadings.InputHeartRateViewModel
+import com.example.healthconnect.codelab.presentation.screen.inputreadings.InputHeartRateViewModelFactory
 import com.example.healthconnect.codelab.presentation.screen.inputreadings.InputReadingsScreen
 import com.example.healthconnect.codelab.presentation.screen.inputreadings.InputReadingsViewModel
 import com.example.healthconnect.codelab.presentation.screen.inputreadings.InputReadingsViewModelFactory
@@ -165,6 +168,43 @@ fun HealthConnectNavigation(
           onPermissionsResult()
         }
       InputReadingsScreen(
+        permissionsGranted = permissionsGranted,
+        permissions = permissions,
+
+        uiState = viewModel.uiState,
+        onInsertClick = { weightInput ->
+          viewModel.inputReadings(weightInput)
+        },
+        weeklyAvg = weeklyAvg,
+        readingsList = readingsList,
+        onError = { exception ->
+          showExceptionSnackbar(scaffoldState, scope, exception)
+        },
+        onPermissionsResult = {
+          viewModel.initialLoad()
+        },
+        onPermissionsLaunch = { values ->
+          permissionsLauncher.launch(values)
+        }
+      )
+    }
+    // add a heart beat screen
+    composable(Screen.InputHeartrate.route) {
+      val viewModel: InputHeartRateViewModel = viewModel(
+        factory = InputHeartRateViewModelFactory(
+          healthConnectManager = healthConnectManager
+        )
+      )
+      val permissionsGranted by viewModel.permissionsGranted
+      val readingsList by viewModel.readingsList
+      val permissions = viewModel.permissions
+      val weeklyAvg by viewModel.weeklyAvg
+      val onPermissionsResult = { viewModel.initialLoad() }
+      val permissionsLauncher =
+        rememberLauncherForActivityResult(viewModel.permissionsLauncher) {
+          onPermissionsResult()
+        }
+      InputHeartRateScreen(
         permissionsGranted = permissionsGranted,
         permissions = permissions,
 

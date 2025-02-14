@@ -122,9 +122,9 @@ class InputHeartRateViewModelFactory(
     private val healthConnectManager: HealthConnectManager,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(InputReadingsViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(InputHeartRateViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return InputReadingsViewModel(
+            return InputHeartRateViewModel(
                 healthConnectManager = healthConnectManager
             ) as T
         }
